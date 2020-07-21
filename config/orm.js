@@ -1,40 +1,53 @@
-// Import MySQL connection.
-const connection = require("../config/connection.js");
+const connection = require("./connection.js");
 
-const orm = {
-  all: (tableInput, cb) => {
+// ORM
+let orm = {
+  selectAll: (tableInput, cb) => {
     const queryString = "SELECT * FROM ??";
-    connection.query(queryString, [tableInput], (err, result) => {
+
+    connection.query(queryString, [tableInput], (err, data) => {
       if (err) {
         throw err;
       }
-      cb(result);
+      cb(data);
     });
   },
 
-  create: (table, newRowData, cb) => {
+  insertOne: (tableInput, newRowData, cb) => {
     const queryString = "INSERT INTO ?? SET ?";
-    const values = [table, newRowData];
+    const values = [tableInput, newRowData];
 
-    connection.query(queryString, values, (err, result) => {
+    connection.query(queryString, values, (err, data) => {
       if (err) {
         throw err;
       }
-      cb(result);
+      cb(data);
     });
   },
 
-  update: (table, updateValues, condition, cb) => {
-    const queryString = "UPDATE ?? SET ? WHERE ?";
-    const values = [table, updateValues, condition];
+  updateOne: (tableInput, updateValues, condition, cb) => {
+    const queryString = "UPDATE ?? SET ? Where ?";
+    const values = [tableInput, updateValues, condition];
 
-    console.log(queryString);
-    connection.query(queryString, values, (err, result) => {
+    connection.query(queryString, values, (err, data) => {
       if (err) {
         throw err;
       }
-      cb(result);
+      cb(data);
     });
   },
 
+  deleteOne: (tableInput, condition, cb) => {
+    const queryString = "DELETE FROM ?? WHERE ?";
+    const values = [tableInput, condition];
+
+    connection.query(queryString, values, (err, data) => {
+      if (err) {
+        throw err;
+      }
+      cb(data);
+    });
+  }
 };
+
+module.exports = orm;
